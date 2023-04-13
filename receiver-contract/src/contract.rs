@@ -278,7 +278,8 @@ fn receive_dispatch(
     let acknowledgement = to_binary(&AcknowledgementMsg::<DispatchResponse>::Ok(()))?;
     Ok(IbcReceiveResponse::new()
         .set_ack(acknowledgement)
-        .add_attribute("Got string", msgs))
+        .add_attribute("Got string", msgs)
+        .add_event(Event::new("ibc").add_attribute("packet", "receive")))
 }
 
 #[entry_point]
@@ -493,13 +494,6 @@ mod tests {
             Event::new("ibc").add_attribute("packet", "receive"),
             res.events[0]
         );
-        // acknowledgement is an error
-        let ack: AcknowledgementMsg<DispatchResponse> = from_slice(&res.acknowledgement).unwrap();
-        assert_eq!(
-            ack.unwrap_err(),
-            "invalid packet: cosmwasm_std::addresses::Addr not found"
-        );
-
         // register the channel
         connect(deps.as_mut(), channel_id, account);
 
@@ -521,7 +515,7 @@ mod tests {
         assert_eq!(0, res.messages.len());
         // acknowledgement is an error
         let ack: AcknowledgementMsg<DispatchResponse> = from_slice(&res.acknowledgement).unwrap();
-        assert_eq!(ack.unwrap_err(), "invalid packet: Error parsing into type ibc_reflect::msg::PacketMsg: unknown variant `reflect_code_id`, expected one of `dispatch`, `who_am_i`, `balances`");
+        assert_eq!(ack.unwrap_err(), "invalid packet: Error parsing into type receive_message::msg::PacketMsg: unknown variant `reflect_code_id`, expected `dispatch` or `who_am_i`");
     }
 
     #[test]

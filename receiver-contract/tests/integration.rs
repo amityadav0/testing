@@ -227,13 +227,9 @@ fn handle_dispatch_packet() {
         Event::new("ibc").add_attribute("packet", "receive"),
         res.events[0]
     );
-    // acknowledgement is an error
-    let ack: AcknowledgementMsg<DispatchResponse> =
-        from_slice(&res.acknowledgement, DESERIALIZATION_LIMIT).unwrap();
-    assert_eq!(
-        ack.unwrap_err(),
-        "invalid packet: cosmwasm_std::addresses::Addr not found"
-    );
+    // Verify string is received
+    assert_eq!(res.attributes, [("Got string", msgs_to_dispatch)]);
+
 
     // register the channel
     connect(&mut deps, channel_id, account);
@@ -246,11 +242,6 @@ fn handle_dispatch_packet() {
     let ack: AcknowledgementMsg<DispatchResponse> =
         from_slice(&res.acknowledgement, DESERIALIZATION_LIMIT).unwrap();
     ack.unwrap();
-
-    // and we dispatch the BankMsg
-    assert_eq!(1, res.messages.len());
-    assert_eq!(RECEIVE_DISPATCH_ID, res.messages[0].id);
-
     // invalid packet format on registered channel also returns app-level error
     let bad_data = InstantiateMsg {
         reflect_code_id: 12345,
@@ -262,5 +253,5 @@ fn handle_dispatch_packet() {
     // acknowledgement is an error
     let ack: AcknowledgementMsg<DispatchResponse> =
         from_slice(&res.acknowledgement, DESERIALIZATION_LIMIT).unwrap();
-    assert_eq!(ack.unwrap_err(), "invalid packet: Error parsing into type ibc_reflect::msg::PacketMsg: unknown variant `reflect_code_id`, expected one of `dispatch`, `who_am_i`, `balances`");
+    assert_eq!(ack.unwrap_err(), "invalid packet: Error parsing into type receive_message::msg::PacketMsg: unknown variant `reflect_code_id`, expected `dispatch` or `who_am_i`");
 }

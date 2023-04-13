@@ -1,2 +1,2 @@
 212b4e82f40a986a944aa41a689c96c7f3e077c8e1aca410eba0f043ec807cab  ./target/wasm32-unknown-unknown/release/ibc_reflect.wasm
-eafdd6c09524d2ffd840542e3f24b87fd2952898565611d05c6cbdc1b91dbf7c  ./target/wasm32-unknown-unknown/release/receive_message.wasm
+d2b6b30e7a4ef7891380081d99926abf6eca01f1e06290ba4ea6ccc456cbd4f4  ./target/wasm32-unknown-unknown/release/receive_message.wasm

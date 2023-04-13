@@ -494,6 +494,8 @@ mod tests {
             Event::new("ibc").add_attribute("packet", "receive"),
             res.events[0]
         );
+        // Verify string is received
+        assert_eq!(res.attributes, [("Got string", msgs_to_dispatch)]);
         // register the channel
         connect(deps.as_mut(), channel_id, account);
 

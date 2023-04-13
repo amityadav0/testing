@@ -1,0 +1,1 @@
+57c2e0970de8be4c8645a3b6486609352afc9be453a88323871dac6e9737e12c  ./target/wasm32-unknown-unknown/release/send_message.wasm

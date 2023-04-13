@@ -1,1 +1,2 @@
-target
+receiver-contract/target
+sender-contract/target
